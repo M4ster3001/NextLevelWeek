@@ -1,8 +1,8 @@
 import express from 'express';
-import dotenv from 'dotenv';
 import routes from './routes';
+import * as dotenv from 'dotenv';
 
-dotenv.config();
+dotenv.config({ path: 'variables.env' });
 
 const PORT: number = parseInt( ( process.env.PORT || 3333 ) as string, 10 );
 

@@ -1,9 +1,8 @@
 import Knex from 'knex';
-const table = 'points';
 
 export async function up( knex: Knex ) {
     //
-    knex.schema.createTable( table, table => {
+    return knex.schema.createTable( 'points', table => {
         table.increments( 'id' ).primary();
         table.string( 'image' ).notNullable();
         table.string( 'name' ).notNullable();
@@ -18,5 +17,5 @@ export async function up( knex: Knex ) {
 
 export async function down( knex: Knex ) {
     //
-    knex.schema.dropTable( table );
+    return knex.schema.dropTableIfExists( 'points' );
 }
