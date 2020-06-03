@@ -8,7 +8,8 @@
     "dev": "ts-node-dev src/server.ts",
     "knex:make": "knex --knexfile knexfile.ts -x ts migrate:make",
     "knex:latest": "knex --knexfile knexfile.ts migrate:latest",
-    "knex:rollback": "knex --knexfile knexfile.ts migrate:rollback"
+    "knex:rollback": "knex --knexfile knexfile.ts migrate:rollback",
+    "knex:seed": "knex --knexfile knexfile.ts seed:run"
   },
   "keywords": [],
   "author": "",
