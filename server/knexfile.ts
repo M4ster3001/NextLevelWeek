@@ -6,7 +6,8 @@ export default {
     development: {
       client: 'sqlite3',
       connection: {
-        filename: path.resolve( __dirname, 'src', 'database', 'database.sqlite' )
+        filename: path.resolve( __dirname, 'src', 'database', 'database.sqlite' ),
+        acquireConnectionTimeout: 10000
       },
       migrations: {
         directory: path.resolve( __dirname, 'src', 'database', 'migrations')
@@ -15,6 +16,12 @@ export default {
         directory: path.resolve( __dirname, 'src', 'database', 'seeds' )
       },
       useNullAsDefault: true,
+      debug: true,
+      pool: {
+        min: 1,
+        max: 20,
+      },
+      
     },
   
     staging: {

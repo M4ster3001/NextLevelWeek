@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 
 export default class ItemsController {
 
-    async list ( req:Request, res:Response ) {
+    async index ( req:Request, res:Response ) {
         const items = await connection( 'items' ).select( '*' );
     
         const listItems = items.map( ls => {
