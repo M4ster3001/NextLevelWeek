@@ -7,3 +7,5 @@
 - tabelas criadas e conexão com o banco alterada para sqlite3, porque com MySQL estava dando erro ao criar a chave estrangeira
 
 - criando as rotas para listar e criar points e items
+
+- criando controllers
