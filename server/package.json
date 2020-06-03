@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "",
-    "dev": "ts-node-dev src/server.ts",
+    "dev": "ts-node-dev --ignore-watch node_modules src/server.ts",
     "knex:make": "knex --knexfile knexfile.ts -x ts migrate:make",
     "knex:latest": "knex --knexfile knexfile.ts migrate:latest",
     "knex:rollback": "knex --knexfile knexfile.ts migrate:rollback",

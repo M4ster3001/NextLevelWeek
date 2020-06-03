@@ -2,10 +2,10 @@ import * as Knex from "knex";
 
 export async function seed(knex: Knex): Promise<any> {
     // Deletes ALL existing entries
-    return knex("points").del()
-        .then(() => {
+    return await knex("points").del()
+        .then( async () => {
             // Inserts seed entries
-            return knex("points").insert([
+            return await knex("points").insert([
                 {
                     image: '/img/teste.jpg',
                     name: 'Aldo',
