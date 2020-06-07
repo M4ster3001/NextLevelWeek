@@ -53,11 +53,11 @@ export default class PointsController {
     } 
 
     async create( req: Request, res: Response ) {
-        const { name, email, telefone, latitude, longitude, city, uf, items } = req.body;
+        const { name, email, phone, latitude, longitude, city, uf, items } = req.body;
 
         const trx = await connection.transaction();
 
-        const point = { image: 'img-fake', name, email, telefone, latitude, longitude, city, uf };
+        const point = { image: 'img-fake', name, email, telefone: phone, latitude, longitude, city, uf };
 
         const id_item = await trx( 'points' ).insert( point );
 
