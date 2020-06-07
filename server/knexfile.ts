@@ -1,7 +1,7 @@
 // Update with your config settings.
 import path from 'path';
 
-export default {
+module.exports = {
 
     development: {
       client: 'sqlite3',
@@ -16,7 +16,7 @@ export default {
         directory: path.resolve( __dirname, 'src', 'database', 'seeds' )
       },
       useNullAsDefault: true,
-      debug: true,
+      //debug: true,
       pool: {
         min: 1,
         max: 20,
