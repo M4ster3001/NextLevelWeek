@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "./node_modules/.bin/pm2 start src/server.ts",
+    "start": "pm2 start --interpreter ts-node-dev src/server.ts --name ecoleta",
     "dev": "ts-node-dev --ignore-watch node_modules src/server.ts",
     "knex:make": "knex --knexfile knexfile.ts -x ts migrate:make",
     "knex:latest": "knex --knexfile knexfile.ts migrate:latest",
