@@ -28,6 +28,8 @@
 
     - Paginas 
        - Home (x)
+        - criando os selects
        - Points (x)
-       - Details ( )
+       - Details (x)
         - mail composer
+    
