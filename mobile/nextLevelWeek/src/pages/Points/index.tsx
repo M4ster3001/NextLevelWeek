@@ -18,7 +18,6 @@ interface Points {
   id: number;
   image: string;
   name: string;
-  telefone: string;
   latitude: number;
   longitude: number;
 }
@@ -37,8 +36,8 @@ const Points = () => {
         navigation.goBack();
     }
 
-    function handleNavigationToDetail() {
-        navigation.navigate('Details');
+    function handleNavigationToDetail( id:number ) {
+        navigation.navigate('Details', { point_id: id });
     }
 
     function handleSelectedItem( id:number ) {
@@ -56,14 +55,23 @@ const Points = () => {
     }
    
     useEffect( () => {
-      api.get( `items` ).then( response => {
-        setItems( response.data );
+      api.get( `items` ).then( res => {
+        setItems( res.data );
       } );
     }, []);
    
     useEffect( () => {
-      api.get( `points/${ selectedItems }` ).then( response => {
-        setPoints( response.data );
+
+      api.get( `points`, {
+        params: {
+          'city': 'Getulina',
+          'uf': 'SP',
+          'items': selectedItems
+        }
+      } ).then( res => {
+        
+        setPoints( res.data );
+
       } );
     }, [selectedItems]);
 
@@ -84,7 +92,10 @@ const Points = () => {
         ])
 
       }
-    });
+
+      loadPosition();
+
+    }, []);
 
     return (
         <>
@@ -97,38 +108,41 @@ const Points = () => {
                 <Text style={styles.description}>Encontre no mapa um ponto de coleta.</Text>
 
                 <View style={styles.mapContainer}>
-                    <MapView 
-                      style={styles.map} 
-                      loadingEnabled={ initialPosition[0] === 0 }
-                      initialRegion={{ 
-                        latitude: initialPosition[0] ,
-                        longitude: initialPosition[1],
-                        latitudeDelta: 0.014,
-                        longitudeDelta: 0.014, 
-                      }} 
-                    >
-                      {
-                        points.map( point => 
-                          <Marker key={ String( point.id ) }
-                            style={ styles.mapMarker }
-                            onPress={handleNavigationToDetail}
-                            coordinate= {{ 
-                              latitude: point.latitude ,
-                              longitude: point.longitude,
-                            }} 
-                          >
-    
-                          <View style={ styles.mapMarkerContainer }>
-                            <Image style={ styles.mapMarkerImage } source={{ uri: `http://192.168.10.102:3333/uploads/${ point.image }`  }} />
-                          <Text style={ styles.mapMarkerTitle } >{point.name}</Text>
-                          </View>
+                    { initialPosition[0] !== 0 && 
+                      (
+                          <MapView 
+                          style={styles.map} 
+                          initialRegion={{ 
+                            latitude: initialPosition[0] ,
+                            longitude: initialPosition[1],
+                            latitudeDelta: 0.014,
+                            longitudeDelta: 0.014, 
+                          }} 
+                        >
+                          {
+                            points.map( point => 
+                              <Marker 
+                                key={ String( point.id ) }
+                                style={ styles.mapMarker }
+                                onPress={() => handleNavigationToDetail(point.id) }
+                                coordinate= {{ 
+                                  latitude: point.latitude ,
+                                  longitude: point.longitude,
+                                }} 
+                              >
+        
+                              <View style={ styles.mapMarkerContainer }>
+                                <Image style={ styles.mapMarkerImage } source={{ uri: `http://192.168.10.102:3333/uploads/${ point.image }`  }} />
+                              <Text style={ styles.mapMarkerTitle } >{point.name}</Text>
+                              </View>
 
-                          </Marker>
-                        )
-                      }
-                     
-
-                    </MapView>
+                              </Marker>
+                            )
+                          }
+                          
+                        </MapView>
+                      )
+                    }
                 </View>
                 
             </View>

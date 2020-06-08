@@ -24,9 +24,7 @@ export default class PointsController {
             
             points = await connection( 'points' )
             .select( '*' );
-        }
-        
-       
+        }              
 
         if( !points ) {
             return res.json({ error: 'Nenhum registro encontrado' })
@@ -85,30 +83,33 @@ export default class PointsController {
 
         const trx = await connection.transaction();
 
-        const point = { image: image, name, email, telefone: phone, latitude, longitude, city, uf };
+        if( image || name || email || phone || latitude || longitude || city || uf ) {
 
-        const id_item = await trx( 'points' ).where( 'id', id ).update( point );
+            const point = { image: image, name, email, telefone: phone, latitude, longitude, city, uf };
 
-        const point_id = id_item[0];
+            const id_item = await trx( 'points' ).where( 'id', id ).update( point );
+
+            const point_id = id ? id : id_item[0];
+
+        }
 
         if( items ) {
 
             const pointItems = items.map( (item_id: number) => {
                 return {
                     item_id,
-                    point_id,
+                    point_id: id,
                 };
             } )
                 
+            await trx( 'point_items' ).where( 'point_id', id ).delete();
+
             await trx( 'point_items' ).insert( pointItems );
 
         }
         await trx.commit();
 
-        return res.json({
-            id: point_id,
-            ...point,
-        });
+        return res.json({ message: 'Updated' });
     }
 
 }
