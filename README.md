@@ -26,6 +26,6 @@
 
  --- Iniciando verão mobile ---
     - Paginas 
-        Home (x)
-        Points (x)
-        Details ( )
+       - Home (x)
+       - Points (x)
+       - Details ( )
