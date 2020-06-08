@@ -29,6 +29,8 @@
     - Paginas 
        - Home (x)
         - criando os selects
+        - falta o envio dos dados para a pagina points
+
        - Points (x)
        - Details (x)
         - mail composer
