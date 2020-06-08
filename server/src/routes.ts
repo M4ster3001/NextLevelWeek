@@ -24,4 +24,6 @@ routes.get( '/points/:id', pointsController.show)
 
 routes.post( '/points', pointsController.create);
 
+routes.put( '/points/:id', pointsController.update);
+
 export default routes;

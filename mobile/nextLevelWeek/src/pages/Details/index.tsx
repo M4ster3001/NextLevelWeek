@@ -1,9 +1,10 @@
-import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Image, Text } from 'react-native';
-import constants  from 'expo-constants';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, TouchableOpacity, Image, Text, SafeAreaView } from 'react-native';
+import Constants  from 'expo-constants';
 import { Feather as Icon, FontAwesome } from '@expo/vector-icons' 
 import { useNavigation } from '@react-navigation/native';
-import { RectButton } from 'react-native-gesture-handler'
+import { RectButton } from 'react-native-gesture-handler';
+import api  from '../../services/api'
 
 const Details = () => {
     const navigation = useNavigation();
@@ -12,8 +13,12 @@ const Details = () => {
         navigation.goBack();
     }
 
+    useEffect( () => {
+        api.get( `/points/` );
+    });
+
     return (
-        <>
+        <SafeAreaView style={{ flex: 1 }}>
             <View style={ styles.container } >
                 <TouchableOpacity onPress={handleNavigateBack}>
                     <Icon name="arrow-left" size={20} color="#34cb79" />
@@ -42,7 +47,7 @@ const Details = () => {
                     <Text style={ styles.buttonText } >E-mail</Text>
                 </RectButton>
             </View>
-        </>
+        </SafeAreaView>
     );
 }
 
@@ -50,7 +55,7 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       padding: 32,
-      paddingTop: 20,
+      paddingTop: 20 + Constants.statusBarHeight,
     },
   
     pointImage: {

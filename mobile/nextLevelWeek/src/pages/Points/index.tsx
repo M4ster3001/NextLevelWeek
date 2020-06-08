@@ -1,15 +1,37 @@
-import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, ScrollView, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, TouchableOpacity, Text, ScrollView, Image, Alert } from 'react-native';
 import Constants from 'expo-constants';
 import { Feather as Icon } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import MapView, { Marker } from 'react-native-maps';
 import { SvgUri } from 'react-native-svg';  
+import api  from '../../services/api';
+import * as Location from 'expo-location'; 
 
+interface Items {
+  id: number;
+  title: string;
+  image_url: string;
+}
+
+interface Points {
+  id: number;
+  image: string;
+  name: string;
+  telefone: string;
+  latitude: number;
+  longitude: number;
+}
 
 const Points = () => {
 
     const navigation = useNavigation();
+
+    const [items, setItems] = useState<Items[]>([]);
+    const [points, setPoints] = useState<Points[]>([]);
+    const [ selectedItems, setSelectedItems ] = useState<Number[]>([]);
+
+    const [ initialPosition, setInitialPosition ] = useState<[number, number]>([0, 0])
 
     function handleNavigationback() {
         navigation.goBack();
@@ -18,6 +40,51 @@ const Points = () => {
     function handleNavigationToDetail() {
         navigation.navigate('Details');
     }
+
+    function handleSelectedItem( id:number ) {
+      const alreadySelected = selectedItems.findIndex( item => item === id );
+
+      if( alreadySelected >= 0 ) {
+        const filteredItems = selectedItems.filter( item => item !== id );
+
+        setSelectedItems( filteredItems );
+      } else {
+
+        setSelectedItems([ ...selectedItems, id ])
+      }
+
+    }
+   
+    useEffect( () => {
+      api.get( `items` ).then( response => {
+        setItems( response.data );
+      } );
+    }, []);
+   
+    useEffect( () => {
+      api.get( `points/${ selectedItems }` ).then( response => {
+        setPoints( response.data );
+      } );
+    }, [selectedItems]);
+
+    useEffect( () => {
+      async function loadPosition() {
+        const { status } = await Location.requestPermissionsAsync();
+
+        if( status !== 'granted' ) {
+          Alert.alert( 'Ops ocorreu um erro', 'Precisamos da sua permissão para obter a sua localização' )
+          return;
+        }
+
+        const location = await Location.getCurrentPositionAsync();
+
+        const { latitude, longitude } = location.coords;
+        setInitialPosition([
+          latitude, longitude
+        ])
+
+      }
+    });
 
     return (
         <>
@@ -32,27 +99,35 @@ const Points = () => {
                 <View style={styles.mapContainer}>
                     <MapView 
                       style={styles.map} 
+                      loadingEnabled={ initialPosition[0] === 0 }
                       initialRegion={{ 
-                        latitude: -21.791816 ,
-                        longitude: -49.9267487,
+                        latitude: initialPosition[0] ,
+                        longitude: initialPosition[1],
                         latitudeDelta: 0.014,
                         longitudeDelta: 0.014, 
                       }} 
                     >
-                      <Marker 
-                        style={ styles.mapMarker }
-                        onPress={handleNavigationToDetail}
-                        coordinate= {{ 
-                          latitude: -21.791816 ,
-                          longitude: -49.9267487,
-                        }} 
-                      >
+                      {
+                        points.map( point => 
+                          <Marker key={ String( point.id ) }
+                            style={ styles.mapMarker }
+                            onPress={handleNavigationToDetail}
+                            coordinate= {{ 
+                              latitude: point.latitude ,
+                              longitude: point.longitude,
+                            }} 
+                          >
+    
+                          <View style={ styles.mapMarkerContainer }>
+                            <Image style={ styles.mapMarkerImage } source={{ uri: `http://192.168.10.102:3333/uploads/${ point.image }`  }} />
+                          <Text style={ styles.mapMarkerTitle } >{point.name}</Text>
+                          </View>
 
-                      <View style={ styles.mapMarkerContainer }>
-                        <Image style={ styles.mapMarkerImage } source={{ uri: 'https://helioprint.com.br/wp-content/uploads/2017/07/organizar-prateleiras-supermercado-900x365.jpg' }} />
-                        <Text style={ styles.mapMarkerTitle } >Mercado do zé</Text>
-                      </View>
-                      </Marker>
+                          </Marker>
+                        )
+                      }
+                     
+
                     </MapView>
                 </View>
                 
@@ -64,40 +139,24 @@ const Points = () => {
                     showsHorizontalScrollIndicator={false} 
                     contentContainerStyle={{ paddingHorizontal: 20 }}
                 >
-                    <TouchableOpacity style={styles.item} onPress={()=> {}}>
-                        <SvgUri width={42} height={42} uri="http://192.168.10.102:3333/uploads/oleo.svg" />
-                        <Text style={styles.itemTitle}>Oleo</Text>
-                    </TouchableOpacity>
+                  {
+                    items.map( item => 
+                      <TouchableOpacity 
+                        activeOpacity={0.6}
+                        key={String( item.id )} 
+                        style={[
+                          styles.item,
+                          selectedItems.includes(item.id) ? styles.selectedItem : {}
+                        ]} 
+                        onPress={ () => handleSelectedItem( item.id ) }
+                      >
+                          <SvgUri width={42} height={42} uri={`http://192.168.10.102:3333/uploads/${ item.image_url }`} />
+                          <Text style={styles.itemTitle}>{item.title}</Text>
+                      </TouchableOpacity>
+                    )
+                  }
+                    
 
-                    <TouchableOpacity style={styles.item} onPress={()=> {}}>
-                        <SvgUri width={42} height={42} uri="http://192.168.10.102:3333/uploads/oleo.svg" />
-                        <Text style={styles.itemTitle}>Oleo</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.item} onPress={()=> {}}>
-                        <SvgUri width={42} height={42} uri="http://192.168.10.102:3333/uploads/oleo.svg" />
-                        <Text style={styles.itemTitle}>Oleo</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.item} onPress={()=> {}}>
-                        <SvgUri width={42} height={42} uri="http://192.168.10.102:3333/uploads/oleo.svg" />
-                        <Text style={styles.itemTitle}>Oleo</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.item} onPress={()=> {}}>
-                        <SvgUri width={42} height={42} uri="http://192.168.10.102:3333/uploads/oleo.svg" />
-                        <Text style={styles.itemTitle}>Oleo</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.item} onPress={()=> {}}>
-                        <SvgUri width={42} height={42} uri="http://192.168.10.102:3333/uploads/oleo.svg" />
-                        <Text style={styles.itemTitle}>Oleo</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.item} onPress={()=> {}}>
-                        <SvgUri width={42} height={42} uri="http://192.168.10.102:3333/uploads/oleo.svg" />
-                        <Text style={styles.itemTitle}>Oleo</Text>
-                    </TouchableOpacity>
                 </ScrollView>
             </View>
         </>

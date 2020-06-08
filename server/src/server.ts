@@ -26,7 +26,7 @@ app.use( cors( options ) )
 app.use( express.json() );
 app.use( routes );
 
-app.use( morgan('dev') );
+app.use( morgan('short') );
 
 if( !fs.existsSync( '/uploads' ) ){
     fs.mkdirSync( '/uploads' );

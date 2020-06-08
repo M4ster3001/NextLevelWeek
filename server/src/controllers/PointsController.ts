@@ -78,4 +78,37 @@ export default class PointsController {
             ...point,
         });
     }
+
+    async update( req: Request, res: Response ) {
+        const { name, email, image, phone, latitude, longitude, city, uf, items } = req.body;
+        const { id } = req.params;
+
+        const trx = await connection.transaction();
+
+        const point = { image: image, name, email, telefone: phone, latitude, longitude, city, uf };
+
+        const id_item = await trx( 'points' ).where( 'id', id ).update( point );
+
+        const point_id = id_item[0];
+
+        if( items ) {
+
+            const pointItems = items.map( (item_id: number) => {
+                return {
+                    item_id,
+                    point_id,
+                };
+            } )
+                
+            await trx( 'point_items' ).insert( pointItems );
+
+        }
+        await trx.commit();
+
+        return res.json({
+            id: point_id,
+            ...point,
+        });
+    }
+
 }
