@@ -28,10 +28,11 @@
 
     - Paginas 
        - Home (x)
-        - criando os selects
-        - falta o envio dos dados para a pagina points
+        - criando os selects (x)
+        - envio dos dados para a pagina points ()
 
        - Points (x)
        - Details (x)
-        - mail composer
+        - mail composer (x)
+        - whatsapp link (x)
     

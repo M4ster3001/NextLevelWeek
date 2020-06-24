@@ -77,7 +77,7 @@ const Details = () => {
                     <Icon name="arrow-left" size={20} color="#34cb79" />
                 </TouchableOpacity>
 
-                <Image style={styles.pointImage} source={{ uri: `http://192.168.10.102:3333/uploads/${ data.points.image }` }} />
+                <Image style={styles.pointImage} source={{ uri: `/uploads/${ data.points.image }` }} />
 
                 <Text style={styles.pointName}>{ data.points.name }</Text>
                 <Text style={styles.pointItems}>{ data.items.map( item => item.title ).join( ', ' ) }</Text>

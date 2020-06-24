@@ -1,11 +1,17 @@
+const os = require( 'os' );
+
+const numCPUs = os.cpus().length;
+const numWorkers = Math.round( numCPUs * 0.5 );
+//const free_mem = parseInt( ( os.freemem() - ( os.freemem() * 0.1 ) ) / 1024 ) / 1024;
+
 module.exports = {
   apps : [{
     "name": "web",
     "exec_mode": "cluster",
-    "instances": "2",
+    "instances": numWorkers,
     "script": "./src/server.ts",
     "interpreter": "./node_modules/.bin/ts-node",
-    "max_memory_restart": "300M",
+    "max_memory_restart": "1G",
     "watch": true,
     env: {
       "NODE_ENV": "development"

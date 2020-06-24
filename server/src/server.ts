@@ -5,13 +5,13 @@ import * as dotenv from 'dotenv';
 import cors from 'cors';
 import morgan from 'morgan';
 import fs from 'fs';
+const os = require( 'os' );
 
+console.clear();
 
 dotenv.config({ path: 'variables.env' });
 
 const PORT: number = parseInt( ( process.env.PORT || 3333 ) as string, 10 );
-
-console.clear();
 
 const options:cors.CorsOptions = {
     origin: process.env.API_URL,
